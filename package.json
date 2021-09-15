@@ -1,0 +1,22 @@
+{
+  "name": "mycobot",
+  "version": "1.0.0",
+  "description": "This is a javascript API for mycobot serial communication",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/elephantrobotics/jsmycobot.git"
+  },
+  "author": "weiquan.xu@elephantrobotics.com",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/elephantrobotics/jsmycobot/issues"
+  },
+  "homepage": "https://github.com/elephantrobotics/jsmycobot#readme",
+  "dependencies": {
+    "serialport": "^9.1.0"
+  }
+}
