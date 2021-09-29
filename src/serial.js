@@ -1,6 +1,8 @@
-import SerialPort from "serialport";
+'use strict';
 
-export function portList() {
+var SerialPort = require("serialport")
+
+function portList() {
   return new Promise(function (resolve, reject) {
     SerialPort.list()
       .then((ports) => {
@@ -12,6 +14,11 @@ export function portList() {
 
 // let serialPort = null;
 
-export function createSerial(portString, baud) {
-  return new SerialPort(portString, { baudRate: baud, autoOpen: false });
+function createSerial(portString, baud = 115200) {
+  return new SerialPort(portString, { baudRate: baud });
+}
+
+module.exports = {
+  createSerial,
+  portList
 }

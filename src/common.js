@@ -1,4 +1,4 @@
-export const Command = {
+const Command = {
   // BASIC
   HEADER: "FE",
   FOOTER: "FA",
@@ -70,9 +70,10 @@ export const Command = {
 
   // Basic
   SET_BASIC_OUTPUT: "A0",
+  GET_BASIC_INPUT: "A1"
 }
 
-export const Angle = {
+const Angle = {
   Joint1: 1,
   Joint2: 2,
   Joint3: 3,
@@ -81,11 +82,17 @@ export const Angle = {
   Joint6: 6,
 }
 
-export const Coord = {
+const Coord = {
   X: 1,
   Y: 2,
   Z: 3,
   Rx: 4,
   Ry: 5,
   Rz: 6,
+}
+
+module.exports = {
+  Command,
+  Angle,
+  Coord
 }

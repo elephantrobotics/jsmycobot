@@ -1,4 +1,6 @@
-import { Command } from './common.js';
+'use strict';
+
+var Comman = require('./common.js')
 
 function isArray(obj) {
   return Object.prototype.toString.call(obj) === '[object Array]';
@@ -17,7 +19,7 @@ function buf2hex(buffer) { // buffer is an ArrayBuffer
   return Array.prototype.map.call(new Uint8Array(buffer), x => ('00' + x.toString(16)).slice(-2));
 }
 
-export function transToHexString(genre, commands = []) {
+function transToHexString(genre, commands = []) {
   let result = "";
   let temp;
   commands.forEach(item => {
@@ -32,13 +34,13 @@ export function transToHexString(genre, commands = []) {
     }
 
   });
-  let commandLen = (result.length / 2 + 2).toString(16);
+  let commandLen = (parseInt(result.length / 2) + 2).toString(16);
   let lenStr = commandLen.length == 2 ? commandLen : '0' + commandLen;
-  console.log('command:', Command.HEADER + Command.HEADER + lenStr + genre + result + Command.FOOTER)
-  return Command.HEADER + Command.HEADER + lenStr + genre + result + Command.FOOTER;
+  console.log(Comman.Command.HEADER + Comman.Command.HEADER + lenStr + genre + result + Comman.Command.FOOTER)
+  return Comman.Command.HEADER + Comman.Command.HEADER + lenStr + genre + result + Comman.Command.FOOTER;
 }
 
-export function processReceived(buf) {
+function processReceived(buf) {
   let hexArr = buf2hex(buf);
   /**
    * Looking for valid data from the received data. Like:
@@ -56,19 +58,30 @@ export function processReceived(buf) {
   if (genre === undefined || len === undefined)
     return [null, null];
   // Trans hex string to data int.
-  let dataRes;
-  let tempArr;
+  let dataRes = [];
+  let tempArr = hexArr.slice(index, index + len);
+  var d
   switch (len) {
     case 8:
     case 12:
-      tempArr = hexArr.slice(index, index + len);
-      dataRes = [];
       for (let i = 0; i < tempArr.length; i += 2) {
-        let d = parseInt(tempArr[i] + tempArr[i + 1], 16);
+        d = parseInt(tempArr[i] + tempArr[i + 1], 16);
         dataRes.push(d > 33000 ? d - 65536 : d);
       }
       break;
-
+    case 2:
+      if (genre == Comman.Command.IS_SERVO_ENABLE) {
+        d = parseInt(tempArr[0] + tempArr[1], 8);
+        dataRes.push(d > 33000 ? d - 65536 : d)
+        break
+      }
+      d = parseInt(tempArr[0], 16);
+      dataRes.push(d > 33000 ? d - 65536 : d)
+      break
+    case 1:
+      d = parseInt(tempArr[0], 8);
+      dataRes.push(d > 33000 ? d - 65536 : d);
+      break
     default:
       dataRes = null;
       break;
@@ -76,23 +89,29 @@ export function processReceived(buf) {
   // Process data to readable.
   genre = genre.toUpperCase()
   switch (genre) {
-    case Command.GET_ANGLES:
+    case Comman.Command.GET_ANGLES:
       for (let i = 0; i < dataRes.length; ++i)
         dataRes[i] /= 100;
       break;
 
-    case Command.GET_COORDS:
+    case Comman.Command.GET_COORDS:
       for (let i = 0; i < 3; ++i)
         dataRes[i] /= 10;
       for (let i = 3; i < dataRes.length; ++i)
         dataRes[i] /= 100;
       break;
 
+    case Comman.Command.IS_POWER_ON:
+      dataRes = dataRes[0]
+      break
+
     default:
       break;
   }
-
-  return [dataRes, genre];
+  return dataRes;
 }
 
-
+module.exports = {
+  transToHexString,
+  processReceived
+}
