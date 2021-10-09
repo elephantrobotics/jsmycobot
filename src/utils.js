@@ -69,6 +69,7 @@ function processReceived(buf) {
       }
       break;
     case 2:
+      console.log(2)
       if (genre == Comman.Command.IS_SERVO_ENABLE) {
         d = parseInt(tempArr[0] + tempArr[1], 8);
         dataRes.push(d > 33000 ? d - 65536 : d)
@@ -78,6 +79,7 @@ function processReceived(buf) {
       dataRes.push(d > 33000 ? d - 65536 : d)
       break
     case 1:
+      console.log(111)
       d = parseInt(tempArr[0], 8);
       dataRes.push(d > 33000 ? d - 65536 : d);
       break
@@ -107,7 +109,12 @@ function processReceived(buf) {
     default:
       break;
   }
-  return dataRes;
+  if (dataRes.length == 1) {
+    return dataRes[0]
+  } else {
+    return dataRes;
+  }
+
 }
 
 module.exports = {

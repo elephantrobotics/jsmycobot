@@ -90,7 +90,7 @@ function getCoords() {
 // 发送单个坐标
 function sendCoord(id, coord, speed) {
   error.calibration_parameters("sendCoord", id, coord, speed)
-  return Buffer.from(utils.transToHexString(Comman.Command.SEND_COORD, [id, coord, speed]), "hex");
+  return Buffer.from(utils.transToHexString(Comman.Command.SEND_COORD, [id, [coord * 10], speed]), "hex");
 }
 // 发送所有坐标
 function sendCoords(coords, speed, mode) {
@@ -104,7 +104,7 @@ function sendCoords(coords, speed, mode) {
   for (let i = 3; i < coords.length; i++)
     coords[i] = Math.round(coords[i] * 100);
   error.calibration_parameters("sendCoord", coords.length, 0, speed, mode)
-  return Buffer.from(utils.transToHexString(Comman.Command.SEND_COORDS, [coords, speed, model]), "hex");
+  return Buffer.from(utils.transToHexString(Comman.Command.SEND_COORDS, [coords, speed, mode]), "hex");
 }
 // 程序暂停
 function programPause() {
@@ -125,7 +125,24 @@ function isInPosition(data, flag) {
    *          1 : right position 
    *          -1: error data
    */
-  return Buffer.from(utils.transToHexString(Comman.Command.IS_IN_POSITION, [data, flag]), "hex");
+  let data_list = []
+  if (flag == 1) {
+    for (let i = 0; i < data.length; i++) {
+      if (i < 3) {
+        data_list.push(data[i] * 10)
+      } else {
+        data_list.push(data[i] * 100)
+      }
+    }
+  }
+  else if (flag == 0) {
+    for (let i = 0; i < data.length; i++) {
+      data_list.push(data[i] * 100)
+    }
+  } else {
+    throw "Parameter flag error, expected 0 or 1"
+  }
+  return Buffer.from(utils.transToHexString(Comman.Command.IS_IN_POSITION, [data_list, flag]), "hex");
 }
 // 关节控制
 function jogAngle(joint_id, direction, speed) {

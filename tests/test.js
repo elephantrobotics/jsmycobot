@@ -1,7 +1,7 @@
 
 var mycobot = require("../src/index")
 
-var obj = mycobot.connect("COM15", 115200)
+var obj = mycobot.connect("COM5", 115200)
 
 // 发送指令
 
@@ -10,10 +10,10 @@ var obj = mycobot.connect("COM15", 115200)
 // obj.write(mycobot.isPowerOn())
 // obj.write(mycobot.releaseAllServos())
 // obj.write(mycobot.getAngles())
-obj.write(mycobot.sendAngle(1, 100, 50))
+// obj.write(mycobot.sendAngle(1, 100, 50))
 // obj.write(mycobot.getCoords())
 // obj.write(mycobot.sendCoord())
-// obj.write(mycobot.isInPosition([0, 0, 0, 0, 0, 0], 0))
+obj.write(mycobot.isInPosition([58.5, -0.1, 80, 89.99, -17.4, -57.91], 1))
 // obj.write(mycobot.jogAngle(1, 0, 20))
 
 // obj.write(mycobot.setGripperState(2, 60))
@@ -26,8 +26,8 @@ obj.on("data", (data) => {
   // 数据转换
   res = mycobot.processReceived(data)
   console.log("res:", res)
-  console.log(typeof res)
-  console.log(res[0])
+  // console.log(typeof res)
+  // console.log(res[0])
   // 关闭连接
   obj.close()
 })
