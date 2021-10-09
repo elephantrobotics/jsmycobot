@@ -78,7 +78,6 @@ function sendAngles(angles, speed) {
   error.calibration_parameters("sendAngle", angles.length, 0, speed)
   for (let i = 0; i < angles.length; i++)
     angles[i] = Math.round(angles[i] * 100);
-  process.env.NODE_ENV === "development" && console.log("angles:", angles)
   return Buffer.from(utils.transToHexString(Comman.Command.SEND_ANGLES, [angles, speed]), "hex");
 }
 // 获取坐标

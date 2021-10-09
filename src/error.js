@@ -1,7 +1,7 @@
 'use strict';
 
 function calibration_parameters() {
-    console.log(arguments)
+    // console.log(arguments)
     var joint = [4, 6]
     if (arguments[3] < 0 || arguments[3] > 100) {
         let e = "The speed range is 0 ~ 100. the error speed is " + String(arguments[3])

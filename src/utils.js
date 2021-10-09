@@ -36,7 +36,6 @@ function transToHexString(genre, commands = []) {
   });
   let commandLen = (parseInt(result.length / 2) + 2).toString(16);
   let lenStr = commandLen.length == 2 ? commandLen : '0' + commandLen;
-  console.log(Comman.Command.HEADER + Comman.Command.HEADER + lenStr + genre + result + Comman.Command.FOOTER)
   return Comman.Command.HEADER + Comman.Command.HEADER + lenStr + genre + result + Comman.Command.FOOTER;
 }
 
